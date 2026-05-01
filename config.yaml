@@ -1,0 +1,10 @@
+# Autonomous Data Analyst Agent — Configuration
+missing_threshold: 0.4        # Flag columns with more than 40% missing values
+correlation_threshold: 0.8    # Report correlations above this absolute value
+outlier_iqr_factor: 1.5       # IQR multiplier for outlier detection
+imbalance_ratio: 0.1          # Flag minority classes below this proportion
+test_size: 0.2                # Train/test split ratio
+random_state: 42              # Reproducibility seed
+plots_dir: plots              # Directory to store generated charts
+reports_dir: reports          # Directory to store analysis reports
+n_clusters_range: [2, 7]      # KMeans: try k from 2 to 7, pick best silhouette
