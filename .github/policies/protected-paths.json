@@ -1,0 +1,17 @@
+{
+  "exact": [
+    "src/main.py",
+    "config.yaml"
+  ],
+  "prefixes": [
+    "src/agent/",
+    "src/modeling/",
+    "src/analysis/",
+    "src/reporting/",
+    "src/visualization/"
+  ],
+  "patterns": [
+    "\\.env$",
+    "data/.*\\.csv$"
+  ]
+}

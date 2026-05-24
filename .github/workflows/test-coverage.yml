@@ -1,0 +1,108 @@
+name: Tests & Coverage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'requirements.txt'
+  pull_request:
+    branches: [main]
+  schedule:
+    # Every Friday at 11:00 UTC
+    - cron: '0 11 * * 5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest pytest-cov
+
+      - name: Run tests with coverage
+        run: |
+          python -m pytest tests/ -v \
+            --cov=src \
+            --cov-report=term-missing \
+            --cov-report=json:coverage.json \
+            --tb=short
+        env:
+          PYTHONPATH: .
+
+      - name: Generate coverage summary
+        if: always()
+        run: |
+          python - <<'EOF'
+          import json, datetime, os
+          from pathlib import Path
+
+          cov_file = Path("coverage.json")
+          if not cov_file.exists():
+              print("No coverage data found")
+              exit(0)
+
+          data = json.loads(cov_file.read_text())
+          totals = data.get("totals", {})
+          pct = totals.get("percent_covered", 0)
+          covered = totals.get("covered_lines", 0)
+          missing = totals.get("missing_lines", 0)
+
+          today = datetime.date.today().isoformat()
+          badge = "🟢" if pct >= 70 else "🟡" if pct >= 40 else "🔴"
+
+          report = f"""# Test Coverage Report
+
+**Coverage: {pct:.1f}%** {badge}
+
+_Date: {today}_
+
+| Metric | Value |
+|--------|-------|
+| Covered lines | {covered} |
+| Missing lines | {missing} |
+| Coverage | {pct:.1f}% |
+
+## Per-file Coverage
+
+| File | Coverage |
+|------|----------|
+"""
+          for fname, fdata in data.get("files", {}).items():
+              file_pct = fdata.get("summary", {}).get("percent_covered", 0)
+              file_badge = "🟢" if file_pct >= 70 else "🟡" if file_pct >= 40 else "🔴"
+              clean = fname.replace("src/", "")
+              report += f"| `{clean}` | {file_pct:.0f}% {file_badge} |\n"
+
+          report += "\n---\n_Coverage report complete._\n"
+
+          Path(".github/reports/health").mkdir(parents=True, exist_ok=True)
+          out = Path(f".github/reports/health/{today[:7]}-coverage.md")
+          out.write_text(report)
+          print(f"Coverage: {pct:.1f}% | Report: {out}")
+          EOF
+
+      - name: Commit coverage report
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "felipebridge"
+          git config user.email "felibridge49@gmail.com"
+          git add .github/reports/health/*-coverage.md
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: update test coverage report [skip ci]"
+          git push
