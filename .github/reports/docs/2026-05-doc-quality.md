@@ -1,6 +1,6 @@
 # Doc Quality Report
 
-_Date: 2026-05-24_
+_Date: 2026-05-31_
 
 ## README — 50/100 (needs work)
 
@@ -31,15 +31,15 @@ _Date: 2026-05-24_
 **Undocumented public functions (sample):**
 
 - `src/main.py::main`
+- `src/utils/logger.py::get_logger`
+- `src/utils/config.py::load_config`
+- `src/modeling/model_trainer.py::train_models`
+- `src/modeling/task_inference.py::infer_task`
+- `src/visualization/plot_generator.py::generate_plots`
+- `src/agent/analyst_agent.py::run`
 - `src/analysis/pattern_detector.py::detect_patterns`
 - `src/analysis/eda.py::run_eda`
-- `src/visualization/plot_generator.py::generate_plots`
 - `src/reporting/report_generator.py::generate_report`
-- `src/reporting/report_generator.py::section`
-- `src/utils/config.py::load_config`
-- `src/utils/logger.py::get_logger`
-- `src/agent/analyst_agent.py::run`
-- `src/modeling/model_trainer.py::train_models`
 
 ## Changelog
 
