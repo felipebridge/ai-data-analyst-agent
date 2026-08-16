@@ -1,6 +1,6 @@
 # Doc Quality Report
 
-_Date: 2026-08-09_
+_Date: 2026-08-16_
 
 ## README — 50/100 (needs work)
 
@@ -30,16 +30,16 @@ _Date: 2026-08-09_
 
 **Undocumented public functions (sample):**
 
-- `tests/test_task_inference.py::test_regression_inferred`
-- `tests/test_task_inference.py::test_classification_inferred`
-- `tests/test_task_inference.py::test_regression_inferred_for_generic_last_column`
-- `tests/test_task_inference.py::test_models_assigned_for_regression`
-- `tests/test_task_inference.py::test_metrics_assigned_for_classification`
-- `tests/test_pattern_detector.py::cfg`
-- `tests/test_pattern_detector.py::sample_df`
-- `tests/test_pattern_detector.py::test_detect_strong_correlations`
-- `tests/test_pattern_detector.py::test_no_highly_missing_columns`
-- `tests/test_pattern_detector.py::test_highly_missing_detection`
+- `src/main.py::main`
+- `src/analysis/pattern_detector.py::detect_patterns`
+- `src/analysis/eda.py::run_eda`
+- `src/modeling/model_trainer.py::train_models`
+- `src/modeling/task_inference.py::infer_task`
+- `src/utils/config.py::load_config`
+- `src/utils/logger.py::get_logger`
+- `src/reporting/report_generator.py::generate_report`
+- `src/reporting/report_generator.py::section`
+- `src/visualization/plot_generator.py::generate_plots`
 
 ## Changelog
 
